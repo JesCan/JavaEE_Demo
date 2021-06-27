@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Servisoft</title>
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/servisoft/resources/css/primeflex.css" />
+        <style type="text/css">
+            .customPanelGrid .ui-panelgrid-content {
+             align-items: center;
+             }
+        </style>
+    </h:head>
+
+    <h:body>
+        <h:outputStylesheet name="css/primeflex.css" />
+        <p:growl id="mensaje" showDetail="true" />
+        <p:growl id="growl-sticky" for="sticky-key" showDetail="true" sticky="true" />
+        
+        <h:form>
+           
+            
+            <p:panel id="pnlProducto" header="Productos" footer="Ver listado de productos" styleClass="my-heading-row ui-fluid ui-grid-responsive">
+                <f:facet name="actions">
+                    <p:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
+                        <h:outputText styleClass="ui-icon pi pi-question"/>
+                    </p:commandLink>
+                </f:facet>
+                
+                <h:panelGrid columns="4" width="100%"
+                             columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4" 
+                             styleClass="customPanelGrid"
+                             style="border:0px none; background-color:transparent;">
+                        
+                    <p:outputLabel value="Producto:" />
+                    <p:inputText value="#{productoC.producto.NOMPRO}" maxlength="60" id="descproducto" required="true" requiredMessage="Falta descripción de producto"> 
+                        <p:keyFilter regEx="/[A-Z_a-z_ñ_á_é_í_ó_ú_ ]/"/>
+                    </p:inputText>
+                    
+                    <p:outputLabel value="Precio:" />
+                    <p:inputNumber value="#{productoC.producto.PRECIO}" symbol="S/. " minValue="0" maxValue="9999" decimalPlaces="2"/>
+                    
+                    <p:outputLabel value="Tipo:" />
+                    <p:selectOneRadio value="#{productoC.producto.TIPO}" unselectable="true">
+                        <f:selectItem itemLabel="Vino" itemValue="V" />
+                        <f:selectItem itemLabel="Pisco" itemValue="P" />
+                    </p:selectOneRadio>
+                    
+                    <p:outputLabel value="Tamaño:" />
+                    <p:selectOneMenu id="tamanoProducto" value="#{productoC.producto.TAMANO}">
+                        <f:selectItem itemLabel="Seleccionar" itemValue="" noSelectionOption="true" />
+                        <f:selectItem itemLabel="250 ML" itemValue="250 ML" />
+                        <f:selectItem itemLabel="500 ML" itemValue="500 ML" />
+                        <f:selectItem itemLabel="750 ML" itemValue="750 ML" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="Cantidad:" />
+                    <p:spinner value="#{productoC.producto.STOCK}" min="0" max="50" required="true" />
+                    
+                    <p:outputLabel value="Estado:" />
+                    <p:selectOneRadio value="#{productoC.producto.ESTADO}" unselectable="true">
+                        <f:selectItem itemLabel="Activo" itemValue="A" />
+                        <f:selectItem itemLabel="Inactivo" itemValue="I" />
+                    </p:selectOneRadio>
+                    
+                    <p:commandButton value="Buscar"  icon="pi pi-search" update="@form" />
+                    <p:commandButton id="registro" value="Registrar" actionListener="#{productoC.registrar()}"  icon="pi pi-sign-in" update="@form"/>
+                    <p:commandButton value="Actualizar" icon="pi pi-user-edit" />
+                    <p:commandButton value="Eliminar" icon="pi pi-trash"/>
+
+                </h:panelGrid>  
+                </p:panel>    
+                <p:separator/>
+                
+                <p:dataTable var="producto" value="#{dtBasicView.cars}" emptyMessage="En este momento no tenemos lo que buscas.">
+                    
+                    <f:facet name="header" > 
+                        <div class="p-d-flex p-ai-center p-jc-between">
+                            <span>Catálogo de Productos</span>
+                            <p:inputText id="globalFilter" onkeyup="PF('customersTable').filter()" style="width:20rem" placeholder="¿Buscas algo?"/>
+                        </div>
+                    </f:facet>
+
+                    <p:column field="nombreProducto" headerText="Producto" />
+                    <p:column field="tamanoProducto" headerText="Tamaño" />
+                    <p:column field="precioProducto" headerText="Precio" />
+                    <p:column field="stockProducto" headerText="Stock" />
+                    <p:column field="status" filterable="false">
+                        <span class="customer-badge status-#{customer.status.name().toLowerCase()}">#{customer.status.toString()}</span>
+                    </p:column>
+
+                </p:dataTable>
+
+        </h:form>
+    </h:body>
+</html>
